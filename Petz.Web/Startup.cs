@@ -4,10 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+
+using Petz.Dal;
+using Petz.Dal.Entities;
 
 namespace Petz.Web
 {
@@ -23,7 +28,26 @@ namespace Petz.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString(nameof(ApplicationDbContext)))
+            );
+
+            services.AddDefaultIdentity<User>().AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddRazorPages();
+
+            services.AddAuthentication()
+                .AddGoogle(googleOptions => {
+                    IConfigurationSection googleAuthSection = Configuration.GetSection("Authentication:Google");
+                    googleOptions.ClientId = googleAuthSection["ClientId"];
+                    googleOptions.ClientSecret = googleAuthSection["ClientSecret"];
+                })
+                .AddFacebook(facebookOptions => 
+                {
+                    IConfigurationSection facebookAuthSection = Configuration.GetSection("Authentication:Facebook");
+                    facebookOptions.AppId = facebookAuthSection["AppId"];
+                    facebookOptions.AppSecret = facebookAuthSection["AppSecret"];
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +69,7 @@ namespace Petz.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
