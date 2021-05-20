@@ -4,4 +4,21 @@
     ViewData["Title"] = "Confirm email";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="font-sans min-h-screen flex items-start justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <img class="mx-auto h-12 w-auto" src="/img/logo.png" alt="Petz">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">@Model.StatusMessage</h2>
+    </div>
+    <a asp-area="" asp-page="/Index">
+      <button type="submit" class="mt-6 group relative w-full flex justify-center py-2 px-4 border border-transparent text-md rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 group-hover:text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </span>
+        Continue to Petz
+      </button>
+    </a>
+  </div>
+</div>

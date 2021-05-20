@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 
 using Petz.Dal;
 using Petz.Dal.Entities;
+using Petz.Dal.Services;
+
+using Petz.Web.Services;
 
 namespace Petz.Web
 {
@@ -33,6 +37,18 @@ namespace Petz.Web
             );
 
             services.AddDefaultIdentity<User>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<FamilyService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<PetService>();
+            services.AddScoped<RecordService>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(authMessageSenderOptions => 
+            {
+                authMessageSenderOptions.SendGridUser = Configuration["SendGridUser"];
+                authMessageSenderOptions.SendGridKey = Configuration["SendGridKey"];
+            });
 
             services.AddRazorPages();
 

@@ -1,0 +1,162 @@
+@page
+@model PetModel
+@{
+    ViewData["Title"] = @Model.Pet.Name;
+}
+
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-12 mx-auto">
+    <div class="flex flex-wrap w-full justify-between">
+        <div class="lg:w-1/2">
+            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">@Model.Pet.Name</h1>
+        </div>
+        <div class="flex flex-row text-indigo-500 space-x-3">
+            <a asp-area="" asp-page="/App/Pets/EditPet" asp-route-id="@Model.Pet.Id" title="Edit" class="hover:text-indigo-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+            </a>
+            <a asp-area="" asp-page="/App/Pets/RemovePet" asp-route-id="@Model.Pet.Id" title="Remove" class="hover:text-indigo-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    <p class="leading-relaxed text-base hover:text-gray-700 mb-10">@Model.Pet.Breed</p>
+    <div class="mx-auto flex flex-wrap">    
+        <img class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src="/img/pets/@(Model.Pet.Id).jpg" alt=@Model.Pet.Name>
+        <div class="lg:w-1/2 w-full lg:pl-10 mt-6 lg:mt-0">
+            <div class="flex flex-wrap w-full mb-5 justify-between">
+                <div class="lg:w-1/2 mb-6 lg:mb-0">
+                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Tasks</h1>
+                    <div class="h-1 w-20 bg-indigo-500 rounded"></div>
+                </div>
+                
+                <a asp-area="" asp-page="/App/Tasks/AddTask" asp-route-id="@(Model.Pet.Id)">
+                    <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-md">Add</button>
+                </a>
+            </div>
+
+            @if (Model.UncompletedTasks.Count != 0)
+            {
+                <div class="flex flex-wrap sm:mx-auto -mx-2 mb-5">
+                    @foreach (var task in Model.UncompletedTasks)
+                    {
+                        <div class="p-2 sm:w-1/2 w-full">
+                            <div class="bg-gray-100 hover:bg-gray-200 rounded flex p-4 h-full items-center">
+                                <div class="flex flex-col w-full">
+                                    <div class="flex flex-row justify-between">
+                                        <span class="text-indigo-600 title-font font-medium">@task.Title</span>
+                                        <form asp-page-handler="complete" method="post">
+                                            <input type="hidden" asp-for="TaskId" value=@task.Id />
+                                            <input type="hidden" asp-for="Id" value="@Model.Pet.Id" />
+                                            <button type="submit" title="Complete" class="hover:text-indigo-600 align-middle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </button>
+                                        </form> 
+                                    </div>
+                                    <span class="text-md font-medium mb-2"><span class="text-indigo-600">Due: </span>@task.Date.ToString("HH:mm, dd MMM")</span>
+                                    <span class="text-sm font-light">@task.Description</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else 
+            {
+                <div class="flex justify-center">
+                    <p class="text-lg text-center text-gray-900 font-medium title-font mt-2 mb-5">No tasks have been added yet.</p>
+                </div>
+            }  
+                     
+            <div class="flex flex-wrap w-full mb-5 justify-between">
+                <div class="lg:w-1/2 mb-6 lg:mb-0">
+                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Health</h1>
+                    <div class="h-1 w-20 bg-indigo-500 rounded"></div>
+                </div>
+                
+                <a asp-area="" asp-page="/App/Records/AddMedicalRecord" asp-route-id="@(Model.Pet.Id)">
+                    <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-md">Add</button>
+                </a>
+            </div>
+
+            @if (Model.Pet.MedicalRecords.ToList().Count != 0)
+            {
+                <div class="flex flex-wrap sm:mx-auto -mx-2 mb-5">
+                    @foreach (var medicalRecord in Model.Pet.MedicalRecords)
+                    {
+                        <div class="p-2 sm:w-1/2 w-full">
+                            <div class="bg-gray-100 hover:bg-gray-200 rounded flex p-4 h-full items-center">
+                                <div class="flex flex-col w-full">
+                                    <div class="flex flex-row justify-between mb-2">
+                                        <span class="text-indigo-600 title-font font-medium">@medicalRecord.Title</span>
+                                        <a asp-area="" asp-page="/App/Records/RemoveMedicalRecord" asp-route-id=@medicalRecord.Id title="Remove" class="hover:text-indigo-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <span class="text-sm font-light">@medicalRecord.Description</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else 
+            {
+                <div class="flex justify-center">
+                    <p class="text-lg text-center text-gray-900 font-medium title-font mt-2 mb-5">No medical records have been added yet.</p>
+                </div>
+            }  
+
+            <div class="flex flex-wrap w-full mb-5 justify-between">
+                <div class="lg:w-1/2 mb-6 lg:mb-0">
+                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Expenses</h1>
+                    <div class="h-1 w-20 bg-indigo-500 rounded"></div>
+                </div>
+                
+                <a asp-area="" asp-page="/App/Records/AddExpenseRecord" asp-route-id="@(Model.Pet.Id)">
+                    <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-md">Add</button>
+                </a>
+            </div>
+
+            @if (Model.Pet.ExpenseRecords.ToList().Count != 0)
+            {
+                <div class="flex flex-wrap sm:mx-auto -mx-2 mb-5 ">
+                    @foreach (var expenseRecord in Model.Pet.ExpenseRecords)
+                    {
+                        <div class="p-2 sm:w-1/2 w-full">
+                            <div class="bg-gray-100 hover:bg-gray-200 rounded flex p-4 h-full items-center">
+                                <div class="flex flex-col w-full">
+                                    <div class="flex flex-row justify-between">
+                                        <span class="title-font font-medium text-indigo-600">@expenseRecord.Title</span>
+                                        <a asp-area="" asp-page="/App/Records/RemoveExpenseRecord" asp-route-id=@expenseRecord.Id title="Remove" class="hover:text-indigo-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <span class="text-md font-medium mb-2">@expenseRecord.Price Ft</span>
+                                    <span class="text-sm font-light">@expenseRecord.Description</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else 
+            {
+                <div class="flex justify-center">
+                    <p class="text-lg text-center text-gray-900 font-medium title-font mt-2 mb-5">No expense records have been added yet.</p>
+                </div>
+            }  
+
+        </div>
+    </div>
+  </div>
+</section>

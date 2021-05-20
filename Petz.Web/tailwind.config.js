@@ -9,7 +9,7 @@ module.exports = {
 				sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
 			},
       bacgroundImage: theme => ({
-        'hero': "url('/img/hero.jpg')"
+        'hero': "url('/img/bg.jpg')"
       })
 		},
 	},

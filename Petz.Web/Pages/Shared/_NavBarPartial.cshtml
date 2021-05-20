@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Identity
+@using Petz.Dal.Entities;
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+
+<header class="text-gray-600 body-font bg-gray-100">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center justify-between">
+        <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" asp-area="" asp-page="@(SignInManager.IsSignedIn(User) ? "/App/Index" : "/Index")">
+            <img class="h-8 w-12" src="/img/logo.png" alt="Petz">
+            <span class="ml-3 text-xl">Petz</span>
+        </a>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center">
+                <a asp-area="" asp-page="/App/Profile" asp-route-id=@UserManager.GetUserId(User) class="mr-5 hover:text-gray-900">Profile</a>
+            </nav>
+
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                <button class="inline-flex items-center text-gray-900 bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Sign Out
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </form>
+        }
+    </div>
+</header>
