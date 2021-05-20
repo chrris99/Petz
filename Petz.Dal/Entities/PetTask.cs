@@ -7,7 +7,7 @@ namespace Petz.Dal.Entities
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public TaskStatus Status { get; set; }
+        public PetTaskStatus Status { get; set; }
         public DateTime Date { get; set; }
 
         public virtual Pet Pet { get; set; }

@@ -1,6 +1,6 @@
 namespace Petz.Dal.Entities
 {
-    public enum TaskStatus
+    public enum PetTaskStatus
     {
         ToDo,
         InProgress,
