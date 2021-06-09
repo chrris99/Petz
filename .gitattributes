@@ -1,1 +1,2 @@
-./Petz.Web/wwwroot/css/output.css linguist-generated
+# Tailwind generated output CSS
+(^|/)output\.(css|less|scss|styl)$ linguist-generated
